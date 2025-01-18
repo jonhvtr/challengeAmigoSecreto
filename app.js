@@ -1,61 +1,77 @@
-let listaNome = [];
+let friendList = [];
 
-function exibirListaNaTela(texto) {
-  let campoLista = document.getElementById("listaAmigos");
+// Função para exibir os nomes na tela
+function displayTextOnScreen(texto) {
+  let field = document.getElementById("listaAmigos");
 
-  campoLista.innerHTML = "";
+  field.innerHTML = "";
 
-  listaNome.forEach((nome, indice) => {
+  friendList.forEach((nome) => {
     const item = document.createElement("li");
-    item.textContent = `${indice + 1}. ${nome}`;
-    campoLista.appendChild(item);
+    item.textContent = nome;
+    field.appendChild(item);
   });
 }
 
-function exibirResultado(resultado) {
-  let campoResultado = document.getElementById("resultado");
-  campoResultado.innerHTML = resultado;
+// Função para exibir o resultado do sorteio
+function showResult(resultado) {
+  let fieldResult = document.getElementById("resultado");
+  fieldResult.innerHTML = resultado;
 }
 
-function adicionarAmigo() {
-  let capturaInput = document.querySelector("input").value;
+// Função para exibir os erros do usuário
+function showErrorMessage(message, color) {
+  let messageError = document.getElementById("message");
+  messageError.style.color = color;
+  messageError.innerHTML = message;
+}
+
+// Função para adicionar os amigos
+function addFriend() {
+  let captureInput = document.querySelector("input").value;
 
   if (
-    typeof capturaInput !== "string" ||
-    capturaInput.trim === "" ||
-    capturaInput.length < 3
+    typeof captureInput !== "string" ||
+    captureInput.trim === "" ||
+    captureInput.length < 3
   ) {
-    alert("Nome inválido!");
-    throw new Error("Nome inválido!");
+    showErrorMessage("Nome inválido", "red");
+    return false;
   } else {
-    listaNome.push(capturaInput);
-    exibirListaNaTela(listaNome);
-    limpaInput();
+    showErrorMessage("");
+    friendList.push(captureInput);
+    displayTextOnScreen(friendList);
+    clearInput();
   }
 }
 
-function sortearAmigo() {
-  let listaAtual = listaNome.length;
-  let nomeEscolhido = listaNome[Math.floor(Math.random() * listaAtual)];
+// Função que faz o sorteio
+function drawFriend() {
+  let updateList = friendList.length;
+  let chosenName = friendList[Math.floor(Math.random() * updateList)];
 
-  if (nomeEscolhido === undefined) {
-    exibirResultado("Adicione um nome na lista");
-    throw new Error("Adicione um nome na lista");
+  if (chosenName === undefined || updateList === 0 || updateList === 1) {
+    showErrorMessage("Adicione pelo menos dois nomes", "red");
+    return false;
   } else {
-    exibirResultado(nomeEscolhido);
+    showResult(`${chosenName} foi sorteado(a)`);
   }
 }
 
-function novoSorteio() {
-  let campoLista = document.getElementById("listaAmigos");
-  let campoResultado = document.getElementById("resultado");
-  campoLista.innerHTML = "";
-  campoResultado.innerHTML = "";
-  listaNome = [];
-  limpaInput();
+// Função para reiniciar/limpar o layout/sorteio
+function newDraw() {
+  let listField = document.getElementById("listaAmigos");
+  let resultField = document.getElementById("resultado");
+  let messageError = document.getElementById("message");
+  messageError.innerHTML = "";
+  listField.innerHTML = "";
+  resultField.innerHTML = "";
+  friendList = [];
+  clearInput();
 }
 
-function limpaInput() {
-  let capturaInput = document.querySelector("input");
-  capturaInput.value = "";
+// Função para limpar o input
+function clearInput() {
+  let captureInput = document.querySelector("input");
+  captureInput.value = "";
 }
